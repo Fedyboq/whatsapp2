@@ -1,0 +1,23 @@
+# Artefactos de compilación de módulos de kernel
+*.ko
+*.o
+*.mod
+*.mod.c
+*.mod.o
+*.symvers
+*.order
+*.cmd
+.*.cmd
+modules.order
+Module.symvers
+.tmp_versions/
+.cache.mk
+
+# Python
+__pycache__/
+*.pyc
+
+# Editores / SO
+*.swp
+*~
+.DS_Store
