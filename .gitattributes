@@ -1,0 +1,7 @@
+# Forzar saltos de línea LF en todo el texto (estos archivos corren en Linux).
+* text=auto eol=lf
+*.sh text eol=lf
+*.py text eol=lf
+*.c  text eol=lf
+*.h  text eol=lf
+Makefile text eol=lf
