@@ -1,23 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""
-calavera.py - Intro teatral (y honesta) para el demo del kernel panic.
 
-Secuencia:
-  1) Una calavera saluda abriendo y cerrando la boca.
-  2) Las calaveras se multiplican hasta llenar la pantalla.
-  3) Glitch rojo + cuenta regresiva: "KERNEL PANIC EN T-3... 2... 1...".
-  4) Cartel final con el comando real para tumbar la VM.
-
-Todo lo que dice es verdad: anuncia que vas a provocar un panic() de verdad.
-No simula ningun hackeo. Es puro terminal: NO toca el sistema.
-
-Uso:
-    python3 calavera.py                 # show y cartel con el comando (seguro)
-    python3 calavera.py --loop          # repite hasta Ctrl+C
-    python3 calavera.py --disparar      # al final carga el modulo y TUMBA la VM
-    python3 calavera.py --silencio      # sin beeps del terminal
-"""
 
 import os
 import sys
@@ -26,18 +9,15 @@ import random
 import shutil
 import subprocess
 
-# Flags (se setean en main()).
 DISPARAR = False
 SILENCIO = False
 
-# ---- Color (se desactiva solo si la salida no es una terminal) ----
 _TTY = sys.stdout.isatty()
 ROJO   = "\033[91m" if _TTY else ""
 BLANCO = "\033[97m" if _TTY else ""
 TENUE  = "\033[90m" if _TTY else ""
 RESET  = "\033[0m"  if _TTY else ""
 
-# ---- Calavera grande (la mandibula, ultima parte, se anima) ----
 CABEZA = r"""
       .-~~~~~~~-.
     .'           '.
@@ -63,7 +43,6 @@ def limpiar():
 
 
 def beep(n=1):
-    """Suena el bell del terminal (si hay terminal y no esta en silencio)."""
     if _TTY and not SILENCIO:
         sys.stdout.write("\a" * n)
         sys.stdout.flush()
@@ -82,7 +61,6 @@ def centrar_h(linea, w):
 
 
 def pantalla_centro(lineas):
-    """Centra un bloque de lineas vertical y horizontalmente."""
     w, h = dims()
     limpiar()
     arriba = max((h - len(lineas)) // 2, 0)
@@ -105,7 +83,6 @@ def dibujar_calavera(mandibula, mensaje=""):
 
 
 def hablar(texto, veces=2):
-    """Abre y cierra la boca mientras 'dice' el texto."""
     for _ in range(veces):
         dibujar_calavera(MAND_ABIERTA, texto)
         beep()
@@ -115,7 +92,6 @@ def hablar(texto, veces=2):
 
 
 def enjambre():
-    """Las calaveras se multiplican progresivamente hasta llenar la pantalla."""
     w, h = dims()
     cw, ch = 7, 4
     ncol = max(w // cw, 1)
@@ -180,7 +156,6 @@ def final():
 
 
 def disparar_panic():
-    """Carga el modulo real (solo con --disparar). Esto tumba la VM."""
     aqui = os.path.dirname(os.path.abspath(__file__))
     ko = os.path.join(aqui, "panic_demo_whatsapp2.ko")
     if not os.path.exists(ko):
@@ -194,7 +169,6 @@ def disparar_panic():
     beep(3)
     time.sleep(0.5)
     try:
-        # No retorna: el kernel entra en panico y detiene la VM.
         subprocess.call(["sudo", "insmod", ko, "modo=panic"])
     except Exception as e:
         print("No se pudo cargar el modulo:", e)
@@ -203,9 +177,7 @@ def disparar_panic():
 def show():
     dibujar_calavera(MAND_CERRADA, "...")
     time.sleep(0.6)
-    hablar("¡Hola! Soy la calavera del kernel")
-    hablar("Vengo a presentar una demo de SO:")
-    hablar("un KERNEL PANIC provocado a proposito")
+    hablar("pipipipipi")
     enjambre()
     glitchear(">>> F A L L A   D E   K E R N E L   I N M I N E N T E <<<")
     cuenta_regresiva()
@@ -222,7 +194,7 @@ def main():
     DISPARAR = "--disparar" in args
     SILENCIO = "--silencio" in args
     try:
-        sys.stdout.write("\033[?25l")  # ocultar cursor
+        sys.stdout.write("\033[?25l")  
         if loop:
             while True:
                 show()
@@ -231,7 +203,7 @@ def main():
     except KeyboardInterrupt:
         pass
     finally:
-        sys.stdout.write("\033[?25h")  # mostrar cursor
+        sys.stdout.write("\033[?25h") 
         sys.stdout.write(RESET)
         print()
 
